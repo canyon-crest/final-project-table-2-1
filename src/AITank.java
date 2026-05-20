@@ -148,6 +148,8 @@ public class AITank extends Tank {
 
 
         double dx = enemy.x - x, dy = enemy.y - y;
+        double distanceToEnemy = Math.hypot(dx, dy);
+        if (distanceToEnemy < 120) return;
         double angleToEnemy = Math.atan2(dy, dx);
         double diff = Math.abs(angleToEnemy - angle);
         while (diff > Math.PI) diff = Math.abs(diff - 2 * Math.PI);

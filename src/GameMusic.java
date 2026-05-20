@@ -3,7 +3,6 @@ import java.io.File;
 
 public class GameMusic {
     public static void main(String[] args) {
-        // This calls the method with your exact filename
         playBackgroundMusic("Down Under - Agartha Remix - YourLocalSchizo (128k).wav");
     }
 
@@ -22,7 +21,6 @@ public class GameMusic {
                 
                 System.out.println("Music is playing!");
             } else {
-                // If it fails, this will tell you exactly where Java is looking
                 System.out.println("Can't find the file: " + filePath);
                 System.out.println("Put your .wav file in this folder: " + System.getProperty("user.dir"));
             }
