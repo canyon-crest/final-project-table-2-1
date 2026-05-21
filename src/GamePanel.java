@@ -333,7 +333,6 @@ public class GamePanel extends JPanel implements ActionListener {
 
 
 
-
         // Update frag bombs
         for (int i = bombs.size()-1; i >= 0; i--) {
             FragBomb fb = bombs.get(i);

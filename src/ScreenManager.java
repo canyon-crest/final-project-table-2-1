@@ -5,7 +5,7 @@ import java.awt.event.*;
 
 public class ScreenManager extends JPanel {
 
-
+	private final Image bgImage = new ImageIcon("src/IMG_7307.jpg").getImage();
     private final CardLayout cards = new CardLayout();
     private JFrame parentFrame;
 
@@ -55,35 +55,83 @@ public class ScreenManager extends JPanel {
         JLabel lbl = centreLabel("Choose players", 26, Color.WHITE);
         lbl.setBounds(110, 60, 400, 40);
         p.add(lbl);
+
         JToggleButton btn1P = modeToggle("1P vs AI");
         JToggleButton btn2P = modeToggle("2P local");
         ButtonGroup grp = new ButtonGroup();
-        grp.add(btn1P); grp.add(btn2P);
+        grp.add(btn1P);
+        grp.add(btn2P);
         btn1P.setSelected(true);
         btn1P.setBounds(110, 130, 160, 80);
         btn2P.setBounds(350, 130, 160, 80);
-        p.add(btn1P); p.add(btn2P);
+        p.add(btn1P);
+        p.add(btn2P);
+
         JLabel scoreLbl = centreLabel("Score to win:", 16, new Color(200,200,200));
         scoreLbl.setBounds(110, 250, 200, 28);
         p.add(scoreLbl);
+
         JSpinner scoreSpinner = new JSpinner(new SpinnerNumberModel(5, 1, 20, 1));
         styleSpinner(scoreSpinner);
         scoreSpinner.setBounds(320, 248, 70, 30);
         p.add(scoreSpinner);
-        JButton btnBack  = makeSmallBtn("< Back");
+
+        JButton btnBack = makeSmallBtn("< Back");
         JButton btnStart = makeBigBtn("Start match >");
-        btnBack .setBounds(30,  620, 120, 40);
+        btnBack .setBounds(30, 620, 120, 40);
         btnStart.setBounds(360, 615, 200, 50);
-        p.add(btnBack); p.add(btnStart);
-        btn1P.addActionListener(e -> selectedMode = GamePanel.GameMode.ONE_PLAYER);
-        btn2P.addActionListener(e -> selectedMode = GamePanel.GameMode.TWO_PLAYER);
+        p.add(btnBack);
+        p.add(btnStart);
+
         btnBack .addActionListener(e -> cards.show(this, "TITLE"));
+
+        JLabel diffLbl = centreLabel("AI Difficulty:", 16, new Color(200, 200, 200));
+        diffLbl.setBounds(110, 310, 200, 28); // Adjusted to 310 to prevent overlapping row 1
+        p.add(diffLbl);
+
+        JButton btnDiff = makeOptionBtn(getDifficultyLabel(aiDifficulty));
+        btnDiff.setBounds(320, 310, 120, 30); // Adjusted to 310 to prevent overlapping row 1
+        p.add(btnDiff);
+
+        btnDiff.addActionListener(e -> {
+            aiDifficulty = (aiDifficulty + 1) % 3;
+            btnDiff.setText(getDifficultyLabel(aiDifficulty));
+        });
+
+        btn1P.addActionListener(e -> {
+            selectedMode = GamePanel.GameMode.ONE_PLAYER;
+            diffLbl.setVisible(true);
+            btnDiff.setVisible(true);
+            
+            // Reset original 1P spacing coordinates
+            scoreLbl.setBounds(110, 250, 200, 28);
+            scoreSpinner.setBounds(320, 248, 70, 30);
+            
+            // CRITICAL FIX: Tell the panel to redraw the components at new bounds
+            p.repaint(); 
+        });
+
+        btn2P.addActionListener(e -> {
+            selectedMode = GamePanel.GameMode.TWO_PLAYER;
+            diffLbl.setVisible(false);
+            btnDiff.setVisible(false); 
+            
+            // Slide the score elements down into the open gap area smoothly
+            scoreLbl.setBounds(110, 310, 200, 28);
+            scoreSpinner.setBounds(320, 308, 70, 30);
+            
+            // CRITICAL FIX: Tell the panel to redraw the components at new bounds
+            p.repaint(); 
+        });
+
         btnStart.addActionListener(e -> {
             targetScore = (int) scoreSpinner.getValue();
             startGame();
         });
+
         return p;
     }
+
 
 
     private JPanel buildControlsScreen() {
@@ -201,16 +249,24 @@ public class ScreenManager extends JPanel {
     }
 
 
-    private JPanel darkPanel() {
-        JPanel p = new JPanel(null) {
-            @Override protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.setColor(new Color(15, 15, 25));
-                g.fillRect(0, 0, getWidth(), getHeight());
-            }
-        };
-        p.setPreferredSize(new Dimension(620, 700));
-        return p;
+    private JPanel darkPanel() { 
+        JPanel p = new JPanel(null) { 
+            @Override 
+            protected void paintComponent(Graphics g) { 
+                super.paintComponent(g); 
+                if (bgImage != null) {
+                    // This draws your image across the background
+                    g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this); 
+                } else {
+                    // This is a safety fallback if the image is missing
+                    g.setColor(new Color(15, 15, 25)); 
+                    g.fillRect(0, 0, getWidth(), getHeight()); 
+                    System.out.println("Error: IMG_7307.jpg not found in src folder");
+                }
+            } 
+        }; 
+        p.setPreferredSize(new Dimension(620, 700)); 
+        return p; 
     }
 
 
@@ -268,6 +324,25 @@ public class ScreenManager extends JPanel {
             tf.setFont(new Font("Arial", Font.BOLD, 14));
         }
     }
+    
+ // Converts our 0, 1, 2 integers into human-readable text
+    private String getDifficultyLabel(int diff) {
+        switch(diff) {
+            case 0:  return "Easy";
+            case 1:  return "Medium";
+            case 2:  return "Hard";
+            default: return "Medium";
+        }
+    }
+
+    // Generates a consistently styled button for our parameters
+    private JButton makeOptionBtn(String text) {
+        JButton btn = new JButton(text);
+        btn.setFont(new Font("Arial", Font.BOLD, 15));
+        btn.setFocusPainted(false);
+        return btn;
+    }
+
 }
 
 
