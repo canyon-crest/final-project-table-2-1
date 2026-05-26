@@ -30,7 +30,7 @@ public class ScreenManager extends JPanel {
 
     private JPanel buildTitleScreen() {
         JPanel p = darkPanel();
-        JLabel title = centreLabel("AMONG US", 54, Color.WHITE);
+        JLabel title = centreLabel("TANK TROUBLE", 54, Color.WHITE);
         title.setBounds(60, 120, 500, 70);
         p.add(title);
         JLabel sub = centreLabel("Table 2", 16, new Color(180, 180, 180));
