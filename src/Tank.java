@@ -91,8 +91,11 @@ public abstract class Tank implements Drawable {
 
     protected void fireStandardBullet(java.util.List<Bullet> bullets) {
         if (ammo <= 0) return;
-        double bx = x + Math.cos(angle) * (CANNON_LEN + BODY_HALF);
-        double by = y + Math.sin(angle) * (CANNON_LEN + BODY_HALF);
+        
+        // Spawn the bullet closer to the center of the tank (using COLLISION_R)
+        double bx = x + Math.cos(angle) * (COLLISION_R - 2);
+        double by = y + Math.sin(angle) * (COLLISION_R - 2);
+        
         bullets.add(new Bullet(bx, by, angle, this));
         lastFire = System.currentTimeMillis();
         ammo--;

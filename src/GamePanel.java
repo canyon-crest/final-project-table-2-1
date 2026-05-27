@@ -20,6 +20,8 @@ public class GamePanel extends JPanel implements ActionListener {
     private GameMode mode;
     private int targetScore;
     private int aiDifficulty;   // 0 easy, 1 medium, 2 hard
+    private int pauseBlinkCounter = 0;
+
 
 
     // ── State ──
@@ -242,14 +244,24 @@ public class GamePanel extends JPanel implements ActionListener {
         requestFocusInWindow();
     }
 
+    public boolean shouldShowBlinkingTank() {
+        // This switches between true and false every 15 frames (about a quarter second)
+        return (pauseBlinkCounter % 30) < 15;
+    }
 
     // ────────────────────────────────────────────
     //  Game loop
     // ────────────────────────────────────────────
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if (state != State.PLAYING) { repaint(); return; }
-
+    public void actionPerformed(ActionEvent e) { 
+        if (state != State.PLAYING) { 
+            // If the game is paused by P1 or P2, count up for the blink effect
+            if (state == State.PAUSED_P1 || state == State.PAUSED_P2) {
+                pauseBlinkCounter++;
+            }
+            repaint(); 
+            return; 
+        }
 
         // Round-end countdown
         if (state == State.ROUND_END) {
