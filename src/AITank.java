@@ -14,10 +14,7 @@ public class AITank extends Tank {
     
     private int difficulty; 
     private int pathfindTimer = 0;
-    private int[] pathDir = {0, 0};
-    private double targetAngle = 0;
     private double targetX, targetY;
-    private boolean hasTarget = false;
 
     public AITank(double x, double y, Color color, int difficulty) {
         super(x, y, color, KeyEvent.VK_NUMPAD8, KeyEvent.VK_NUMPAD2, KeyEvent.VK_NUMPAD4, KeyEvent.VK_NUMPAD6, KeyEvent.VK_NUMPAD0);
@@ -27,7 +24,7 @@ public class AITank extends Tank {
     }
 
     @Override
-    public void update(Maze maze, ArrayList<Bullet> bullets, ArrayList<Laser> lasers, ArrayList<FragBomb> bombs, Tank enemy) {
+    public void update(Maze maze, ArrayList<Bullet> bullets, ArrayList<Laser> lasers, Tank enemy) {
         if (!alive) return;
 
         tickShield();
@@ -44,7 +41,7 @@ public class AITank extends Tank {
 
         // GLOBAL DODGE SYSTEM: Avoids all incoming projectiles on medium/hard difficulties
         if (difficulty > DIFFICULTY_EASY) {
-        	double escapeAngle = findEscapeAngle(bullets, bombs, lasers);
+        	double escapeAngle = findEscapeAngle(bullets, lasers);
             if (escapeAngle != Double.MAX_VALUE) {
                 double option1 = escapeAngle;
                 double option2 = escapeAngle + Math.PI;
@@ -69,10 +66,10 @@ public class AITank extends Tank {
         move(SPEED * forwardFactor, maze);
 
         // Fire safely
-        tryFire(bullets, lasers, bombs, maze, enemy);
+        tryFire(bullets, lasers, maze, enemy);
     }
 
-    private double findEscapeAngle(ArrayList<Bullet> bullets, ArrayList<FragBomb> bombs, ArrayList<Laser> lasers) {
+    private double findEscapeAngle(ArrayList<Bullet> bullets, ArrayList<Laser> lasers) {
         double closestDist = 180.0; 
         double threatAngle = Double.MAX_VALUE;
 
@@ -82,15 +79,6 @@ public class AITank extends Tank {
             if (dist < closestDist && isHeadingTowardMe(b.x, b.y, b.angle)) {
                 closestDist = dist;
                 threatAngle = b.angle;
-            }
-        }
-
-        for (FragBomb b : bombs) {
-            if (b.owner == this) continue;
-            double dist = Math.hypot(x - b.x, y - b.y);
-            if (dist < closestDist) {
-                closestDist = dist;
-                threatAngle = Math.atan2(y - b.y, x - b.x);
             }
         }
 
@@ -160,7 +148,7 @@ public class AITank extends Tank {
         targetY = bestRow * Maze.CELL + Maze.CELL / 2.0;
     }
 
-    private void tryFire(ArrayList<Bullet> bullets, ArrayList<Laser> lasers, ArrayList<FragBomb> bombs, Maze maze, Tank enemy) {
+    private void tryFire(ArrayList<Bullet> bullets, ArrayList<Laser> lasers, Maze maze, Tank enemy) {
         if (!canFire()) return;
 
         double dx = enemy.x - x, dy = enemy.y - y;

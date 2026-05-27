@@ -72,7 +72,7 @@ public abstract class Tank implements Drawable {
         return true;
     }
 
-    public abstract void update(Maze maze, ArrayList<Bullet> bullets, ArrayList<Laser> lasers, ArrayList<FragBomb> bombs, Tank enemy);
+    public abstract void update(Maze maze, ArrayList<Bullet> bullets, ArrayList<Laser> lasers, Tank enemy);
 
     protected void move(double speed, Maze maze) {
         double nx = x + Math.cos(angle) * speed;

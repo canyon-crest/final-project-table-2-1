@@ -34,9 +34,8 @@ public class GamePanel extends JPanel implements ActionListener {
     private int          score1 = 0, score2 = 0;
 
 
-    private final ArrayList<Bullet>       bullets   = new ArrayList<>();
+	private final ArrayList<Bullet> bullets   = new ArrayList<>();
     private final ArrayList<Laser>        lasers    = new ArrayList<>();
-    private final ArrayList<FragBomb>     bombs     = new ArrayList<>();
     private final ArrayList<PowerUp>      powerUps  = new ArrayList<>();
 
 
@@ -188,7 +187,7 @@ public class GamePanel extends JPanel implements ActionListener {
     //  Round reset
     // ────────────────────────────────────────────
     private void resetRound() {
-        lasers.clear(); bombs.clear(); powerUps.clear();
+        bullets.clear(); lasers.clear(); powerUps.clear();
         powerUpSpawnTimer = 0;
 
 
@@ -263,8 +262,8 @@ public class GamePanel extends JPanel implements ActionListener {
 
 
         // Update tanks
-        p1.update(maze, bullets, lasers, bombs, p2);
-        p2.update(maze, bullets, lasers, bombs, p1);
+        p1.update(maze, bullets, lasers, p2);
+        p2.update(maze, bullets, lasers, p1);
 
 
         // Update bullets
@@ -296,13 +295,6 @@ public class GamePanel extends JPanel implements ActionListener {
             if (l.hits(p2)) { p2.hit(); score1++; checkWinAndReset(); return; }
         }
 
-
-
-        // Update frag bombs
-        for (int i = bombs.size()-1; i >= 0; i--) {
-            FragBomb fb = bombs.get(i);
-            if (fb.update()) bombs.remove(i);
-        }
 
 
         // Power-up spawn
@@ -392,10 +384,6 @@ public class GamePanel extends JPanel implements ActionListener {
 
         // ── Power-ups ──
         for (PowerUp pu : powerUps) pu.draw(g2);
-
-
-        // ── Bombs ──
-        for (FragBomb fb : bombs) fb.draw(g2);
 
 
         // ── Bullets / missiles ──

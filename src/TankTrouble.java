@@ -8,7 +8,7 @@ public class TankTrouble {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
         	
-            GameMusic.playBackgroundMusic("Down Under - Agartha Remix - YourLocalSchizo (128k).wav");
+            GameMusic.playBackgroundMusic("src/Down Under - Agartha Remix - YourLocalSchizo (128k).wav");
 
         	
             JFrame frame = new JFrame("Tank Trouble");

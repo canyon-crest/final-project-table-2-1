@@ -148,8 +148,7 @@ public class ScreenManager extends JPanel {
             {"", ""},
             {"Power-ups appear as crates. Drive over to collect.", ""},
             {"L=Laser  S=Shield  F=Frag Bomb  G=Shotgun", ""},
-            {"H=Homing Missile  R=RC Missile", ""},
-        };
+            };
         int y = 120;
         for (String[] row : rows) {
             JLabel l1 = new JLabel(row[0]);
@@ -176,41 +175,12 @@ public class ScreenManager extends JPanel {
         JLabel title = centreLabel("Settings", 28, Color.WHITE);
         title.setBounds(110, 40, 400, 42);
         p.add(title);
-        p.add(sliderRow(p, "Music volume",  70, 160));
-        p.add(sliderRow(p, "Sound effects", 75, 220));
-        JLabel diffLbl = new JLabel("Difficulty (AI)");
-        diffLbl.setForeground(Color.WHITE);
-        diffLbl.setFont(new Font("Arial", Font.BOLD, 14));
-        diffLbl.setBounds(60, 290, 160, 26);
-        p.add(diffLbl);
-        JSlider diffSlider = new JSlider(0, 2, aiDifficulty);
-        diffSlider.setMajorTickSpacing(1);
-        diffSlider.setPaintTicks(true);
-        diffSlider.setSnapToTicks(true);
-        diffSlider.setBackground(new Color(30, 30, 50));
-        diffSlider.setForeground(Color.WHITE);
-        java.util.Hashtable<Integer,JLabel> labels = new java.util.Hashtable<>();
-        labels.put(0, styledSliderLabel("Easy"));
-        labels.put(1, styledSliderLabel("Medium"));
-        labels.put(2, styledSliderLabel("Hard"));
-        diffSlider.setLabelTable(labels);
-        diffSlider.setPaintLabels(true);
-        diffSlider.setBounds(280, 285, 270, 50);
-        diffSlider.addChangeListener(e -> aiDifficulty = diffSlider.getValue());
-        p.add(diffSlider);
-        JButton back = makeSmallBtn("< Back");
+        JSlider musicSlider = sliderRow(p, "Music volume", 70, 160);
+        musicSlider.addChangeListener(e -> GameMusic.setVolume((float) musicSlider.getValue()));        JButton back = makeSmallBtn("< Back");
         back.setBounds(30, 640, 120, 38);
         back.addActionListener(e -> cards.show(this, "TITLE"));
         p.add(back);
         return p;
-    }
-
-
-    private JLabel styledSliderLabel(String text) {
-        JLabel l = new JLabel(text);
-        l.setForeground(Color.WHITE);
-        l.setFont(new Font("Arial", Font.PLAIN, 11));
-        return l;
     }
 
 
