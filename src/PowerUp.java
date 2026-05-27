@@ -3,10 +3,12 @@ import java.util.Random;
 
 public class PowerUp implements Drawable {
 
-    public enum Type { SHIELD, AMMO, AIM_GUIDE }
+	public static final int SHIELD    = 0;
+	public static final int AMMO      = 1;
+	public static final int AIM_GUIDE = 2;
+	public int type; 
 
     public double x, y;
-    public Type type;
     private int bobTimer = 0;
     private boolean collected = false;
     private static final int SIZE = 20;
@@ -15,7 +17,7 @@ public class PowerUp implements Drawable {
     public PowerUp(double x, double y) {
         this.x = x; this.y = y;
         int r = RNG.nextInt(10);
-        this.type = (r < 5) ? Type.SHIELD : (r < 8) ? Type.AIM_GUIDE : Type.AMMO;
+        this.type = (r < 5) ? SHIELD : (r < 8) ? AIM_GUIDE : AMMO;
     }
 
     public boolean isCollected() { return collected; }
@@ -50,13 +52,11 @@ public class PowerUp implements Drawable {
         g.drawString(icon, cx - fm.stringWidth(icon) / 2, cy + fm.getAscent() / 2 - 1);
     }
 
-    private static String iconFor(Type t) {
-        switch (t) {
-            case SHIELD:    return "S";
-            case AMMO:      return "A";
-            case AIM_GUIDE: return "X";
-            default:        return "?";
-        }
+    private static String iconFor(int t) {
+    	if (t == SHIELD)    return "S";
+        if (t == AMMO)      return "A";
+        if (t == AIM_GUIDE) return "X";
+        return "?";
     }
 
     public static PowerUp spawn(Maze maze, Tank t1, Tank t2) {

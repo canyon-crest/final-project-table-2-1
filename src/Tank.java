@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.util.Random;
+import java.util.*;
 
 public abstract class Tank implements Drawable {
 
@@ -41,13 +42,13 @@ public abstract class Tank implements Drawable {
                              BODY_HALF * 2, BODY_HALF * 2);
     }
 
-    public void applyPowerUp(PowerUp.Type type) {
-        if (type == PowerUp.Type.SHIELD) {
+    public void applyPowerUp(int type) {
+    	if (type == PowerUp.SHIELD) {
             shieldActive = true;
             shieldTimer  = SHIELD_DURATION;
-        } else if (type == PowerUp.Type.AMMO) {
+        } else if (type == PowerUp.AMMO) {
             ammo += 5 + new Random().nextInt(6);
-        } else if (type == PowerUp.Type.AIM_GUIDE) {
+        } else if (type == PowerUp.AIM_GUIDE) {
             aimGuideStacks++;
             showAimGuide  = true;
             aimGuideTimer = AIM_GUIDE_DURATION;
@@ -71,13 +72,7 @@ public abstract class Tank implements Drawable {
         return true;
     }
 
-    public abstract void update(Maze maze,
-                                java.util.List<Bullet>        bullets,
-                                java.util.List<HomingMissile>  missiles,
-                                java.util.List<RCMissile>      rcMissiles,
-                                java.util.List<Laser>          lasers,
-                                java.util.List<FragBomb>       bombs,
-                                Tank enemy);
+    public abstract void update(Maze maze, ArrayList<Bullet> bullets, ArrayList<Laser> lasers, ArrayList<FragBomb> bombs, Tank enemy);
 
     protected void move(double speed, Maze maze) {
         double nx = x + Math.cos(angle) * speed;

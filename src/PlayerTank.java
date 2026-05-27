@@ -30,12 +30,11 @@ public class PlayerTank extends Tank {
 
 
     @Override
-    public void update(Maze maze, java.util.List<Bullet> bullets, java.util.List<HomingMissile> missiles, java.util.List<RCMissile> rcMissiles, java.util.List<Laser> lasers, java.util.List<FragBomb> bombs, Tank enemy) {
+    public void update (Maze maze, ArrayList<Bullet> bullets, ArrayList<Laser> lasers, ArrayList<FragBomb> bombs, Tank enemy) {
         if (!alive) return;
         tickShield();
         tickAimGuide();
 
-        // CHECK FOR MOVEMENT LOCK
         boolean isFiringLaser = false;
         for (Laser l : lasers) {
             if (l.owner == this && l.isFiring) {

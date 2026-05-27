@@ -27,7 +27,7 @@ public class AITank extends Tank {
     }
 
     @Override
-    public void update(Maze maze, java.util.List<Bullet> bullets, java.util.List<HomingMissile> missiles, java.util.List<RCMissile> rcMissiles, java.util.List<Laser> lasers, java.util.List<FragBomb> bombs, Tank enemy) {
+    public void update(Maze maze, ArrayList<Bullet> bullets, ArrayList<Laser> lasers, ArrayList<FragBomb> bombs, Tank enemy) {
         if (!alive) return;
 
         tickShield();
@@ -44,7 +44,7 @@ public class AITank extends Tank {
 
         // GLOBAL DODGE SYSTEM: Avoids all incoming projectiles on medium/hard difficulties
         if (difficulty > DIFFICULTY_EASY) {
-            double escapeAngle = findEscapeAngle(bullets, missiles, bombs, lasers);
+        	double escapeAngle = findEscapeAngle(bullets, bombs, lasers);
             if (escapeAngle != Double.MAX_VALUE) {
                 double option1 = escapeAngle;
                 double option2 = escapeAngle + Math.PI;
@@ -69,10 +69,10 @@ public class AITank extends Tank {
         move(SPEED * forwardFactor, maze);
 
         // Fire safely
-        tryFire(bullets, missiles, lasers, bombs, maze, enemy);
+        tryFire(bullets, lasers, bombs, maze, enemy);
     }
 
-    private double findEscapeAngle(java.util.List<Bullet> bullets, java.util.List<HomingMissile> missiles, java.util.List<FragBomb> bombs, java.util.List<Laser> lasers) {
+    private double findEscapeAngle(ArrayList<Bullet> bullets, ArrayList<FragBomb> bombs, ArrayList<Laser> lasers) {
         double closestDist = 180.0; 
         double threatAngle = Double.MAX_VALUE;
 
@@ -82,15 +82,6 @@ public class AITank extends Tank {
             if (dist < closestDist && isHeadingTowardMe(b.x, b.y, b.angle)) {
                 closestDist = dist;
                 threatAngle = b.angle;
-            }
-        }
-
-        for (HomingMissile m : missiles) {
-            if (m.owner == this) continue;
-            double dist = Math.hypot(x - m.x, y - m.y);
-            if (dist < closestDist) {
-                closestDist = dist;
-                threatAngle = m.angle;
             }
         }
 
@@ -169,7 +160,7 @@ public class AITank extends Tank {
         targetY = bestRow * Maze.CELL + Maze.CELL / 2.0;
     }
 
-    private void tryFire(java.util.List<Bullet> bullets, java.util.List<HomingMissile> missiles, java.util.List<Laser> lasers, java.util.List<FragBomb> bombs, Maze maze, Tank enemy) {
+    private void tryFire(ArrayList<Bullet> bullets, ArrayList<Laser> lasers, ArrayList<FragBomb> bombs, Maze maze, Tank enemy) {
         if (!canFire()) return;
 
         double dx = enemy.x - x, dy = enemy.y - y;

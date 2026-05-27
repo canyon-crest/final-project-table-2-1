@@ -35,8 +35,6 @@ public class GamePanel extends JPanel implements ActionListener {
 
 
     private final ArrayList<Bullet>       bullets   = new ArrayList<>();
-    private final ArrayList<HomingMissile> missiles  = new ArrayList<>();
-    private final ArrayList<RCMissile>    rcMissiles = new ArrayList<>();
     private final ArrayList<Laser>        lasers    = new ArrayList<>();
     private final ArrayList<FragBomb>     bombs     = new ArrayList<>();
     private final ArrayList<PowerUp>      powerUps  = new ArrayList<>();
@@ -190,7 +188,6 @@ public class GamePanel extends JPanel implements ActionListener {
     //  Round reset
     // ────────────────────────────────────────────
     private void resetRound() {
-        bullets.clear(); missiles.clear(); rcMissiles.clear();
         lasers.clear(); bombs.clear(); powerUps.clear();
         powerUpSpawnTimer = 0;
 
@@ -266,8 +263,8 @@ public class GamePanel extends JPanel implements ActionListener {
 
 
         // Update tanks
-        p1.update(maze, bullets, missiles, rcMissiles, lasers, bombs, p2);
-        p2.update(maze, bullets, missiles, rcMissiles, lasers, bombs, p1);
+        p1.update(maze, bullets, lasers, bombs, p2);
+        p2.update(maze, bullets, lasers, bombs, p1);
 
 
         // Update bullets
@@ -285,38 +282,6 @@ public class GamePanel extends JPanel implements ActionListener {
                 bullets.remove(i);
             }
         }
-
-
-        // Update homing missiles
-        for (int i = missiles.size()-1; i >= 0; i--) {
-            HomingMissile m = missiles.get(i);
-            if (m.update(maze)) { missiles.remove(i); continue; }
-            if (m.owner != p1 && p1.alive && p1.getBounds().intersects(m.getBounds())) {
-                if (p1.hit()) { score2++; checkWinAndReset(); return; }
-                missiles.remove(i); continue;
-            }
-            if (m.owner != p2 && p2.alive && p2.getBounds().intersects(m.getBounds())) {
-                if (p2.hit()) { score1++; checkWinAndReset(); return; }
-                missiles.remove(i);
-            }
-        }
-
-
-        // Update RC missiles
-        for (int i = rcMissiles.size()-1; i >= 0; i--) {
-            RCMissile r = rcMissiles.get(i);
-            // RC missile updating is handled inside PlayerTank.update already,
-            // but we still need to check hits here
-            if (r.owner != p1 && p1.alive && p1.getBounds().intersects(r.getBounds())) {
-                if (p1.hit()) { score2++; checkWinAndReset(); return; }
-                rcMissiles.remove(i); continue;
-            }
-            if (r.owner != p2 && p2.alive && p2.getBounds().intersects(r.getBounds())) {
-                if (p2.hit()) { score1++; checkWinAndReset(); return; }
-                rcMissiles.remove(i);
-            }
-        }
-
 
      // --- Updated Laser Logic for GamePanel.java ---
         for (int i = lasers.size() - 1; i >= 0; i--) {
@@ -435,9 +400,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
         // ── Bullets / missiles ──
         for (Bullet b       : bullets)   b.draw(g2);
-        for (HomingMissile m: missiles)  m.draw(g2);
-        for (RCMissile r    : rcMissiles) r.draw(g2);
-
+       
 
         // ── Lasers ──
         for (Laser l : lasers) l.draw(g2);
