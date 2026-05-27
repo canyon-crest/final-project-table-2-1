@@ -154,8 +154,8 @@ public class ScreenManager extends JPanel {
         for (String[] row : rows) {
             JLabel l1 = new JLabel(row[0]);
             JLabel l2 = new JLabel(row[1]);
-            l1.setForeground(new Color(100, 220, 100));
-            l2.setForeground(new Color(220, 100, 100));
+            l1.setForeground(Color.WHITE);
+            l2.setForeground(Color.WHITE);
             l1.setFont(new Font("SansSerif", Font.PLAIN, 13));
             l2.setFont(new Font("SansSerif", Font.PLAIN, 13));
             l1.setBounds(30, y, 280, 22);
