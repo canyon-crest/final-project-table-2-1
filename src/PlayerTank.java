@@ -5,9 +5,11 @@ import java.util.*;
 /**
  * Human-controlled tank.
  */
+// this is the tank the actual player controls with keyboard input
 public class PlayerTank extends Tank {
 
 
+    // these booleans track wich keys are currently being held down
     private boolean uP, dP, lP, rP, firePressed;
     private static final double SPEED = 3.2;
     private static final double TURN  = 0.07;
@@ -19,6 +21,7 @@ public class PlayerTank extends Tank {
     }
 
 
+    // this gets called every time a key is pressed or released to update the movement flags
     public void handleInput(int k, boolean pressed) {
         if (k == upKey)    uP         = pressed;
         if (k == downKey)  dP         = pressed;
@@ -43,7 +46,7 @@ public class PlayerTank extends Tank {
         }
 
         if (!isFiringLaser) {
-            // Normal movement only if NOT firing
+            // only let the tank move if its not in the middle of shooting a laser
             double speed = (uP ? SPEED : 0) + (dP ? -SPEED : 0);
             angle += (lP ? -TURN : 0) + (rP ? TURN : 0);
             move(speed, maze);
