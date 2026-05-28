@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.util.ArrayList;
 
+// laser powerup, draws a preview line then fires a deadly tracer beam along it
 public class Laser implements Drawable {
 
     public Tank owner;
@@ -16,6 +17,7 @@ public class Laser implements Drawable {
         this.owner = owner;
     }
 
+    // starts the laser, we track the time so we know when to start the tracer
     public void startFire() {
         if (!isFiring) {
             isFiring = true;
@@ -23,6 +25,7 @@ public class Laser implements Drawable {
         }
     }
 
+    // updates the laser path every frame incase the tank moved, returns true when done
     public boolean update(Maze maze) {
         double lx = owner.x + Math.cos(owner.angle) * (owner.CANNON_LEN + owner.BODY_HALF);
         double ly = owner.y + Math.sin(owner.angle) * (owner.CANNON_LEN + owner.BODY_HALF);
@@ -70,6 +73,7 @@ public class Laser implements Drawable {
         }
     }
 
+    // traces the full laser path thru the maze bouncing off walls
     private void calculatePath(double ox, double oy, double angle, Maze maze) {
         segments.clear();
         double dx = Math.cos(angle), dy = Math.sin(angle);
@@ -91,6 +95,7 @@ public class Laser implements Drawable {
         segments.add(new double[]{ox, oy, curX, curY});
     }
 
+    // walks thru each segment and checks if the tracer line overlaps the tank rectangle
     public boolean hits(Tank t) {
         if (!isFiring || System.currentTimeMillis() - fireStartTime < 1000) return false;
         Rectangle r = t.getBounds();
