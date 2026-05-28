@@ -1,12 +1,13 @@
 import java.awt.*;
 import java.util.Random;
 
+// powerup crates that spawn in the maze and do different things when you pick em up
 public class PowerUp implements Drawable {
 
 	public static final int SHIELD    = 0;
 	public static final int AMMO      = 1;
 	public static final int AIM_GUIDE = 2;
-	public int type; 
+	public int type; // wich powerup this one is
 
     public double x, y;
     private int bobTimer = 0;
@@ -22,6 +23,7 @@ public class PowerUp implements Drawable {
 
     public boolean isCollected() { return collected; }
 
+    // bobs the powerup up and down with a sine wave so its easier to notice
     public boolean update() {
         bobTimer++;
         return collected;
@@ -59,6 +61,7 @@ public class PowerUp implements Drawable {
         return "?";
     }
 
+    // tries to spawn the powerup somewhere not to close to either tank
     public static PowerUp spawn(Maze maze, Tank t1, Tank t2) {
         Random rng = new Random();
         for (int attempt = 0; attempt < 100; attempt++) {
