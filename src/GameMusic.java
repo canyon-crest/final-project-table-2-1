@@ -1,9 +1,11 @@
 import javax.sound.sampled.*;
 import java.io.File;
 
+// handles loading and playing the background music
 public class GameMusic {
     private static Clip clip;
 
+    // loads a wav file and loops it forever until the game closes
     public static void playBackgroundMusic(String filePath) {
         try {
             File musicPath = new File(filePath);
@@ -23,6 +25,7 @@ public class GameMusic {
         }
     }
 
+    // converts a 0-100 percent to decibels because thats how java audio works, kinda weird
     public static void setVolume(float percent) {
         if (clip == null) return;
         FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
