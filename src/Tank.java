@@ -2,15 +2,17 @@ import java.awt.*;
 import java.util.Random;
 import java.util.*;
 
+// this is the parent class for both the player tank and the AI tank
 public abstract class Tank implements Drawable {
 
+    // x and y is the tanks position, angle is wich direction it faces
     public double x, y;
     public double angle = 0;
     public boolean alive = true;
     public Color color;
 
     public static final int BODY_HALF   = 10;
-    public static final int COLLISION_R = 11;
+    public static final int COLLISION_R = 11; // this is the radius for wall colision checking
     public static final int CANNON_LEN  = 14;
 
     public int upKey, downKey, leftKey, rightKey, fireKey;
@@ -18,7 +20,7 @@ public abstract class Tank implements Drawable {
     protected long lastFire = 0;
     protected static final long FIRE_COOLDOWN = 400;
 
-    public int ammo = 10;
+    public int ammo = 10; // how many bullets the tank has left to shoot
 
     public boolean shieldActive = false;
     private int shieldTimer = 0;
@@ -42,6 +44,7 @@ public abstract class Tank implements Drawable {
                              BODY_HALF * 2, BODY_HALF * 2);
     }
 
+    // called when the tank drives over a powerup crate
     public void applyPowerUp(int type) {
     	if (type == PowerUp.SHIELD) {
             shieldActive = true;
@@ -55,6 +58,7 @@ public abstract class Tank implements Drawable {
         }
     }
 
+    // counts down the shield timer and turns it off when it expires
     protected void tickShield() {
         if (shieldActive && --shieldTimer <= 0) shieldActive = false;
     }
@@ -63,6 +67,8 @@ public abstract class Tank implements Drawable {
         if (showAimGuide && --aimGuideTimer <= 0) showAimGuide = false;
     }
 
+    // gets called when a bullet or laser hits this tank
+    // if your shielded it blocks it, otherwise the tank dies
     public boolean hit() {
         if (shieldActive) {
             shieldActive = false;
@@ -74,6 +80,7 @@ public abstract class Tank implements Drawable {
 
     public abstract void update(Maze maze, ArrayList<Bullet> bullets, ArrayList<Laser> lasers, Tank enemy);
 
+    // moves the tank forward and checks it dosnt clip thru walls
     protected void move(double speed, Maze maze) {
         double nx = x + Math.cos(angle) * speed;
         double ny = y + Math.sin(angle) * speed;
@@ -85,6 +92,7 @@ public abstract class Tank implements Drawable {
         }
     }
 
+    // makes sure theres a delay between shots so u cant spam bullets
     protected boolean canFire() {
         return System.currentTimeMillis() - lastFire > FIRE_COOLDOWN;
     }
@@ -101,6 +109,7 @@ public abstract class Tank implements Drawable {
         ammo--;
     }
 
+    // draws the whole tank - the body tracks canon and shield circle if active
     @Override
     public void draw(Graphics2D g) {
         if (!alive) return;
