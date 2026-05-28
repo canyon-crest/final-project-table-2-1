@@ -1,19 +1,21 @@
 import java.awt.*;
 
+// bullet class, it extends projectile so it gets all the basic stuff for free
 public class Bullet extends Projectile {
 
-    private static final int MAX_BOUNCES = 5;
+    private static final int MAX_BOUNCES = 5; // after 5 bounces the bullet just disapears
     private int bounces = 0;
 
     public Bullet(double x, double y, double angle, Tank owner) {
         super(x, y, angle, 5.5, owner, 3100);
     }
 
+    // moves the bullet and handles bouncing, returns true when bullet should be removed
     @Override
     public boolean update(Maze maze) {
         if (--life <= 0) return true;
 
-        final int STEPS = 8;
+        final int STEPS = 8; // splits movement into 8 substeps for more acurate colision
         for (int s = 0; s < STEPS; s++) {
             double vx = speed * Math.cos(angle);
             double vy = speed * Math.sin(angle);
@@ -35,6 +37,7 @@ public class Bullet extends Projectile {
         return false;
     }
 
+    // just draws a tiny yellow circle where the bullet is
     @Override
     public void draw(Graphics2D g) {
         g.setColor(Color.YELLOW);
