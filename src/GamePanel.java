@@ -188,6 +188,7 @@ public class GamePanel extends JPanel implements ActionListener {
     // ────────────────────────────────────────────
     //  Round reset
     // ────────────────────────────────────────────
+    // clears all bullets lasers and powerups, then makes a new maze and spawns both tanks
     private void resetRound() {
         bullets.clear(); lasers.clear(); powerUps.clear();
         powerUpSpawnTimer = 0;
@@ -214,6 +215,7 @@ public class GamePanel extends JPanel implements ActionListener {
     // ────────────────────────────────────────────
     //  Input
     // ────────────────────────────────────────────
+    // handles pause keys seperately before passing other keys to the tanks
     private void handleKey(int k, boolean pressed) {
         if (pressed && k == PAUSE_KEY_P1 && state == State.PLAYING) {
             state = State.PAUSED_P1;
@@ -252,6 +254,7 @@ public class GamePanel extends JPanel implements ActionListener {
     // ────────────────────────────────────────────
     //  Game loop
     // ────────────────────────────────────────────
+    // this runs every frame (about 62 times per second), updates everthing in the game
     @Override
     public void actionPerformed(ActionEvent e) { 
         if (state != State.PLAYING) { 
