@@ -5,6 +5,7 @@ import java.util.*;
 /**
  * Computer-controlled tank with smooth steering, threat evasion, and difficulty-locked self-bounce shooting protection.
  */
+// this is the AI tank, it uses pathfinding to chase you and shoot at you
 public class AITank extends Tank {
     private static final double SPEED = 3.2;
     private static final double TURN = 0.07;
@@ -12,7 +13,7 @@ public class AITank extends Tank {
     private static final int DIFFICULTY_MEDIUM = 1;
     private static final int DIFFICULTY_HARD = 2;
     
-    private int difficulty; 
+    private int difficulty; // 0=easy 1=medium 2=hard, controls how good the AI is
     private int pathfindTimer = 0;
     private double targetX, targetY;
 
@@ -32,7 +33,7 @@ public class AITank extends Tank {
 
         if (++pathfindTimer >= 5) {
             pathfindTimer = 0;
-            computeNextTarget(maze, enemy);
+            computeNextTarget(maze, enemy); // recalculates where to go every 5 frames
         }
 
         // Base destination direction
@@ -107,6 +108,7 @@ public class AITank extends Tank {
     }
 
     private void computeNextTarget(Maze maze, Tank enemy) {
+        // uses flood fill to find shortest path to the enemy tank, pretty smart honestly
         int[][] dist = maze.floodFill(enemy.x, enemy.y);
         int myCol = Math.max(0, Math.min(Maze.GRID-1, (int)(x / Maze.CELL)));
         int myRow = Math.max(0, Math.min(Maze.GRID-1, (int)(y / Maze.CELL)));
@@ -132,6 +134,7 @@ public class AITank extends Tank {
         }
 
         if (difficulty == DIFFICULTY_EASY && new Random().nextInt(4) == 0) {
+            // easy mode sometimes picks a random direction instead so it seems dumber
             java.util.List<int[]> opts = new ArrayList<>();
             for (int[] d : dirs) {
                 int nc = myCol + d[0], nr = myRow + d[1];
@@ -148,6 +151,7 @@ public class AITank extends Tank {
         targetY = bestRow * Maze.CELL + Maze.CELL / 2.0;
     }
 
+    // checks if its a good time to fire, tolerence is bigger for easier modes so easy AI misses more
     private void tryFire(ArrayList<Bullet> bullets, ArrayList<Laser> lasers, Maze maze, Tank enemy) {
         if (!canFire()) return;
 
