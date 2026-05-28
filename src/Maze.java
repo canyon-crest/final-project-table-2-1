@@ -11,6 +11,7 @@ import java.awt.*;
  *   hWalls[col][row]  – horizontal wall on the TOP edge of cell (col, row)
  *   Outer border walls are always true.
  */
+// handles the maze generation and all the wall colision stuff for tanks and bullets
 public class Maze {
 
 
@@ -31,6 +32,7 @@ public class Maze {
     // ──────────────────────────────────────────────
     //  Generation (recursive back-tracker / DFS)
     // ──────────────────────────────────────────────
+    // generates a random maze using DFS, starts with all walls and carves out paths
     public void generate() {
         vWalls = new boolean[GRID + 1][GRID];
         hWalls = new boolean[GRID][GRID + 1];
@@ -79,7 +81,7 @@ public class Maze {
         }
 
 
-        // ── Extra wall removal – punch ~25 extra holes to create loops ──
+        // punches extra holes in the maze so there isnt just one path everywhere
         int toRemove = 25;
         for (int attempt = 0; attempt < toRemove * 15 && toRemove > 0; attempt++) {
             if (rng.nextBoolean()) {
@@ -144,6 +146,7 @@ public class Maze {
 
 
     /** True if movement from (col,row) in direction (dc,dr) is unobstructed */
+    // checks if theres a wall blocking movement in a direction, used for pathfinding and tanks
     public boolean canPass(int col, int row, int dc, int dr) {
         if (dc == 1)  return !vWalls[col+1][row];
         if (dc == -1) return !vWalls[col][row];
@@ -162,6 +165,7 @@ public class Maze {
      * Returns true if a circle (px,py,radius) overlaps any wall segment.
      * Used for tank body collision.
      */
+    // this is used to stop the tank from walking thru walls
     public boolean circleHitsWall(double px, double py, double radius) {
         // boundary
         if (px - radius < 0 || px + radius > PX || py - radius < 0 || py + radius > PX)
@@ -192,6 +196,7 @@ public class Maze {
      * Returns 'x', 'y', or 0 indicating which axis a bullet moving from
      * (ox,oy) to (nx,ny) should bounce off.
      */
+    // figures out if a bullet hits a wall and wich way it should bounce, pretty tricky math
     public char bulletBounce(double ox, double oy, double nx, double ny, double dvx, double dvy) {
         int col = (int)(ox / CELL), row = (int)(oy / CELL);
         col = Math.max(0, Math.min(GRID-1, col));
