@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 
+// manages all the different screens (title, mode select, settings, game)
 public class ScreenManager extends JPanel {
 
 	private final Image bgImage = new ImageIcon("src/IMG_7307.jpg").getImage();
@@ -28,6 +29,7 @@ public class ScreenManager extends JPanel {
     }
 
 
+    // builds the main title screen with the three buttons
     private JPanel buildTitleScreen() {
         JPanel p = darkPanel();
         JLabel title = centreLabel("TANK TROUBLE", 54, Color.WHITE);
@@ -50,6 +52,7 @@ public class ScreenManager extends JPanel {
     }
 
 
+    // the screen where you pick 1 player or 2 player and set score limit and difficulty
     private JPanel buildModeScreen() {
         JPanel p = darkPanel();
         JLabel lbl = centreLabel("Choose players", 26, Color.WHITE);
@@ -204,6 +207,7 @@ public class ScreenManager extends JPanel {
     }
 
 
+    // creates the actual game and switches too it, also sets up the return to menu callback
     private void startGame() {
         if (activeGame != null) remove(activeGame);
         activeGame = new GamePanel(selectedMode, targetScore, aiDifficulty, () -> {
